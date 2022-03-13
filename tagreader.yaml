@@ -1,8 +1,16 @@
 # Insert your SSID and Your PWD after inital setup
 wifi:
-# networks:
-#    - ssid: 'REPLACEME'          # Enter your WiFi SSID here. Example: `ssid: 'your_network_name'`
-#      password: 'REPLACEME'      # Enter your wifi password here. Example: `password: 'abcde123456'`
+  networks:
+    - ssid: !secret wifi_ssid          # Enter your WiFi SSID here. Example: `ssid: 'your_network_name'`	
+      password: !secret wifi_password      # Enter your wifi password here. Example: `password: 'abcde123456'`	
+  # Optional manual IP	
+  manual_ip:
+    static_ip: 192.168.84.61
+    gateway: 192.168.84.1
+    subnet: 255.255.255.0
+    dns1: 1.1.1.3
+    dns2: 1.0.0.3
+
   ap:
     ssid: ${name}
 
@@ -26,7 +34,7 @@ esphome:
 
   # Automatically add the mac address to the name
   # so you can use a single firmware for all devices
-  name_add_mac_suffix: true
+  name_add_mac_suffix: false
 
   # This will allow for (future) project identification,
   # configuration and updates.
@@ -82,7 +90,8 @@ button:
           brightness: 100%
           red: 100%
           green: 0%
-          blue: 100%    
+          blue: 100%
+      - rtttl.play: "two short:d=4,o=5,b=100:16e6,16e6"
       - lambda: |-
           static const char alphanum[] = "0123456789abcdef";
           std::string uri = "https://www.home-assistant.io/tag/";
@@ -103,6 +112,7 @@ button:
       - wait_until:
           not:
             pn532.is_writing:
+      - rtttl.play: "two short:d=4,o=5,b=100:16e6,16c6"
       - light.turn_off:
           id: activity_led
   - platform: template
@@ -117,10 +127,12 @@ button:
           red: 100%
           green: 64.7%
           blue: 0%    
+      - rtttl.play: "two short:d=4,o=5,b=100:16a6,16b6"
       - lambda: 'id(pn532_board).clean_mode();'
       - wait_until:
           not:
             pn532.is_writing:
+      - rtttl.play: "two short:d=4,o=5,b=100:16b6,16a6"
       - light.turn_off:
           id: activity_led 
   - platform: template
